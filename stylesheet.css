@@ -1,0 +1,104 @@
+/*
+ * Display Mover — extension CSS.
+ *
+ * Written against the GNOME 50 shell theme, which no longer defines the
+ * legacy @theme_* / @accent_* tokens. Only the runtime custom properties
+ * the shell does define (-st-accent-color / -st-accent-fg-color) and the
+ * st-* color functions are used, so the rules resolve correctly in the
+ * light, dark and high-contrast variants alike.
+ *
+ * The menu container's own background, padding, 1px border and shadow come
+ * from the shell (.popup-menu-content / .panel-menu), so these rules only
+ * style the widgets inside the dropdown.
+ */
+
+/* ============================================================== menu width */
+/* Spec §8: dropdown content min ≈ 600 px, max ≈ 1000 px.                    */
+
+.dm-header,
+.dm-rows,
+.dm-empty {
+    min-width: 600px;
+    max-width: 1000px;
+}
+
+/* =============================================================== menu body */
+
+.dm-scroller {
+    max-height: 520px;
+}
+
+/* ---------------------------------------------------------------- header */
+
+.dm-header {
+    padding: 6px 10px;
+    font-weight: bold;
+}
+
+.dm-separator {
+    min-height: 1px;
+    background-color: st-transparentize(-st-accent-color, 0.85);
+}
+
+.dm-empty {
+    padding: 10px;
+}
+
+/* ------------------------------------------------------------------ rows */
+
+/* .dm-row is an St.BoxLayout (horizontal); `spacing` is the ST gap size. */
+.dm-row {
+    min-height: 42px;
+    padding: 4px 6px;
+    spacing: 12px;
+    border-radius: 10px;
+}
+
+.dm-app-icon,
+.dm-fallback-icon {
+    min-width: 22px;
+    min-height: 22px;
+    margin: 0 2px;
+}
+
+.dm-title {
+    min-height: 22px;
+}
+
+/* ------------------------------------------------------- display buttons */
+
+.dm-display-box {
+    spacing: 6px;
+}
+
+.dm-display-btn {
+    padding: 3px 12px;
+    margin: 2px 0;
+    border-radius: 8px;
+    font-weight: bold;
+    background-color: st-transparentize(-st-accent-color, 0.92);
+}
+
+.dm-display-btn:hover {
+    background-color: st-transparentize(-st-accent-color, 0.78);
+}
+
+/* Window currently on this display (label carries the ✓ mark). */
+.dm-display-current {
+    background-color: st-transparentize(-st-accent-color, 0.62);
+    border: 1px solid st-transparentize(-st-accent-color, 0.75);
+}
+
+.dm-display-current:hover {
+    background-color: st-transparentize(-st-accent-color, 0.52);
+    border: 1px solid st-transparentize(-st-accent-color, 0.85);
+}
+
+/* Primary display (label carries the ★ mark). */
+.dm-primary {
+    border: 1px solid st-transparentize(-st-accent-color, 0.55);
+}
+
+.dm-display-current.dm-primary {
+    border: 1px solid st-transparentize(-st-accent-color, 0.9);
+}
