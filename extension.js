@@ -9,8 +9,8 @@
  *     xrandr, no daemons, no CLI — safe for remote/RDP sessions.
  *   - Current workspace only; moving never changes the workspace.
  *   - Displays are enumerated dynamically (no hard-coded DP-3/HDMI-1/eDP-1).
- *   - NORMAL app windows only: shell windows, skip_taskbar, tooltips and
- *     minimized windows are excluded; sticky windows are included if visible.
+ *   - NORMAL app windows only: shell windows and skip_taskbar surfaces are
+ *     excluded; minimized windows ARE included (marked in the menu).
  *   - Menu stays open after a move; current display marked with "✓",
  *     primary display with "★".
  *   - Errors are logged via console.error and never crash the shell.
@@ -301,15 +301,9 @@ export default class DisplayMoverExtension {
                     continue;
                 }
 
-                // v1: exclude minimized windows; sticky-but-visible stays.
-                if (win.minimized) {
-                    continue;
-                }
-
-                if (typeof win.showing_on_its_workspace === 'function'
-                    && !win.showing_on_its_workspace()) {
-                    continue;
-                }
+                // Minimized windows stay in the list: they belong to the
+                // current workspace and can be moved between displays.
+                // (list_windows() already scopes to this workspace.)
             } catch (err) {
                 logError('skipping window that raised while probing', err);
                 continue;
@@ -518,8 +512,21 @@ export default class DisplayMoverExtension {
             row.add_child(icon);
 
             // ---- Title ---------------------------------------------------
+            let isMinimized = false;
+            try {
+                isMinimized = !!win.minimized;
+            } catch (err) {
+                // Property probe failed — treat as not minimized.
+            }
+            if (isMinimized) {
+                try {
+                    row.add_style_class_name('dm-minimized');
+                } catch (err) {
+                    // Styling is best-effort only.
+                }
+            }
             const title = new St.Label({
-                text: this._windowTitle(win),
+                text: this._windowTitle(win, isMinimized),
                 style_class: 'dm-title',
             });
             // Let the title absorb free space and push the display buttons to
@@ -633,7 +640,7 @@ export default class DisplayMoverExtension {
         return button;
     }
 
-    _windowTitle(win) {
+    _windowTitle(win, isMinimized = false) {
         let title = '';
         try {
             title = win.get_title() || '';
@@ -650,6 +657,9 @@ export default class DisplayMoverExtension {
         title = title.trim();
         if (!title) {
             title = 'Window';
+        }
+        if (isMinimized) {
+            title = `${title} (minimized)`;
         }
         if (title.length > TITLE_MAX_CHARS) {
             title = `${title.slice(0, TITLE_MAX_CHARS - 1).trimEnd()}…`;

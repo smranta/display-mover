@@ -65,6 +65,11 @@
     min-height: 22px;
 }
 
+/* Minimized windows: dim the whole row (title already carries "(minimized)"). */
+.dm-row.dm-minimized {
+    opacity: 0.6;
+}
+
 /* ------------------------------------------------------- display buttons */
 
 .dm-display-box {

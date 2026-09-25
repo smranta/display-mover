@@ -3,7 +3,7 @@
     "name": "Display Mover",
     "url": "https://github.com/smranta/display-mover",
     "description": "Move application windows between connected displays from a panel menu. Uses only the Mutter window API, lists windows on the current workspace, and keeps the menu open after every move — useful for remote/RDP setups where only the primary display is visible.",
-    "version": 1,
+    "version": 2,
     "shell-version": [
         "50"
     ]
